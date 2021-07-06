@@ -1,11 +1,11 @@
 # react-doge-numpad
 
 Wow! Such component! Very react! So numpad!
-[doge](https://github.com/ShawTim/react-doge-numpad/raw/master/react-doge-numpad.png)
+![doge](https://github.com/ShawTim/react-doge-numpad/raw/master/react-doge-numpad.png)
 
 This react component is created by a DOGE lover. No it's nth related to the component itself. I just want to share my love to DOGE to all of you.
 
-[screenshot](https://github.com/ShawTim/react-doge-numpad/raw/master/screenshot.png)
+![screenshot](https://github.com/ShawTim/react-doge-numpad/raw/master/screenshot.png)
 
 This is a Numpad popup.
 
