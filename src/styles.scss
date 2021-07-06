@@ -1,0 +1,75 @@
+/* add css module styles here (optional) */
+
+.doge-numpad {
+    &.MuiDialog-root {
+        .MuiDialog-container {
+            overflow-y: auto;
+        }
+        .MuiDialog-paper {
+            width: 432px;
+            height: 420px;
+            min-width: 432px;
+            max-height: 420px;
+            min-height: 420px;
+            overflow-x: auto;
+            @media screen and (max-width: 460px) {
+                width: 300px;
+                height: 320px;
+                min-width: 300px;
+                max-height: 320px;
+                min-height: 320px;
+            }
+            >.MuiCard-root {
+                width: 100%;
+                height: 100%;
+            }
+            .MuiTypography-h5 {
+                @media screen and (max-width: 460px) {
+                    font-size: 1.25rem;
+                    font-weight: 500;
+                    line-height: 1.6;
+                    letter-spacing: 0.0075em;
+                }
+            }
+            .doge-numpad-container {
+                padding: 16px;
+                .doge-display-container {
+                    margin: 0 0 8px 0;
+                    width: 100%;
+                    input {
+                        text-align: right;
+                        font-size: 1.5em;
+                        @media screen and (max-width: 460px) {
+                            font-size: 1em;
+                        }
+                    }
+                }
+                .doge-button-container {
+                    width: 400px;
+                    height: 240px;
+                    display: flex;
+                    flex-direction: column;
+                    flex-wrap: wrap;
+                    @media screen and (max-width: 460px) {
+                        width: 267px;
+                        height: 160px;
+                    }
+                    button {
+                        flex: 1 1 25%;
+                        font-size: 1.5em;
+                        @media screen and (max-width: 460px) {
+                            font-size: 1em;
+                        }
+                        &.doge-enter {
+                            flex: 1 1 50%;
+                            font-size: 2.5em;
+                            @media screen and (max-width: 460px) {
+                                font-size: 1.6em;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
