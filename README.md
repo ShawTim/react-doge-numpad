@@ -55,8 +55,8 @@ const App = () => {
 | `decimal` | `boolean` | N | `true` | Indicate whether the Numpad support decimal |
 | `max` | `number` | N | `1000000000000` | Upper bound of the number |
 | `min` | `number` | N | `0` | Lower bound of the number |
-| `onChange` | `(value: number | string) => void` | N | `() => false` | Callback for handling event when user press Enter |
-| `renderValue` | `(value: number | string) => string` | N | `(value) => String(value)` | Custom function for render/format the number (e.g. currency formating) |
+| `onChange` | `(value: number/string) => void` | N | `() => false` | Callback for handling event when user press Enter |
+| `renderValue` | `(value: number/string) => string` | N | `(value) => String(value)` | Custom function for render/format the number (e.g. currency formating) |
 | `children` | `JSXElement` | N | `null` | Children are required if `inline` is set to `false`, meaning the Numpad is shown as a popup. To enable the Numpad user needs to click or press keys on the children element(s). It can be a `<input>`, a `<button>`, or whatever React components. |
 
 ## License
