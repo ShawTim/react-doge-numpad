@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  Dialog,
-  Card,
-  CardHeader,
-  CardContent,
-  TextField,
-  Button,
-} from "@material-ui/core";
+import { Dialog } from "@material-ui/core";
+import Numpad from "./Numpad";
 import "./styles.scss";
 
 export type NumPadProps = React.PropsWithChildren<{
@@ -20,119 +14,7 @@ export type NumPadProps = React.PropsWithChildren<{
   renderValue?: (value: number | string) => string,
 }>;
 
-type NumPadContainerProps = React.PropsWithChildren<{
-  label?: string,
-  renderedValue?: string,
-  decimal?: boolean,
-  onClickNum: (value: number) => void,
-  onClickDot: () => void,
-  onClick00: () => void,
-  onClickAllClear: () => void,
-  onClickClear: () => void,
-  onClickEnter: () => void,
-}>;
-
-const NumpadContainer = React.forwardRef<HTMLDivElement, NumPadContainerProps>((props, ref) => {
-  const {
-    label = "",
-    renderedValue = "",
-    decimal = true,
-    onClickNum = () => false,
-    onClickDot = () => false,
-    onClick00 = () => false,
-    onClickAllClear = () => false,
-    onClickClear = () => false,
-    onClickEnter = () => false,
-  } = props;
-
-  const onClick0 = useCallback(() => onClickNum(0), [onClickNum]);
-  const onClick1 = useCallback(() => onClickNum(1), [onClickNum]);
-  const onClick2 = useCallback(() => onClickNum(2), [onClickNum]);
-  const onClick3 = useCallback(() => onClickNum(3), [onClickNum]);
-  const onClick4 = useCallback(() => onClickNum(4), [onClickNum]);
-  const onClick5 = useCallback(() => onClickNum(5), [onClickNum]);
-  const onClick6 = useCallback(() => onClickNum(6), [onClickNum]);
-  const onClick7 = useCallback(() => onClickNum(7), [onClickNum]);
-  const onClick8 = useCallback(() => onClickNum(8), [onClickNum]);
-  const onClick9 = useCallback(() => onClickNum(9), [onClickNum]);
-  const onKeyUp = useCallback((ev: React.KeyboardEvent) => {
-    // only fire once
-    const { keyCode } = ev;
-    switch (keyCode) {
-      case 48:
-      case 49:
-      case 50:
-      case 51:
-      case 52:
-      case 53:
-      case 54:
-      case 55:
-      case 56:
-      case 57:
-        console.log("aaaa", ev.key, keyCode);
-        onClickNum(keyCode-48);
-        break;
-      case 190:
-        onClickDot();
-        break;
-      case 13:
-        onClickEnter();
-        ev.preventDefault();
-        break;
-    }
-  }, [onClickNum, onClickDot, onClickEnter]);
-  const onKeyDown = useCallback((ev: React.KeyboardEvent) => {
-    // user can press delete/backspace to delete multiple digits
-    const { keyCode } = ev;
-    switch (keyCode) {
-      case 8:
-      case 46:
-        onClickClear();
-        break;
-      case 13:
-        // cancel default button action
-        ev.preventDefault();
-        break;
-    }
-  }, [onClickClear]);
-
-  return (
-    <Card
-      ref={ref}
-      tabIndex={0}
-      onKeyUp={onKeyUp}
-      onKeyDown={onKeyDown}>
-      {label && <CardHeader title={label} />}
-      <CardContent className="doge-numpad-container">
-        <TextField
-          className="doge-display-container"
-          type="text"
-          value={renderedValue}
-          variant="outlined"
-          inputProps={{ readOnly: true }} />
-        <div className="doge-button-container">
-          <Button variant="outlined" onClick={onClick7}>7</Button>
-          <Button variant="outlined" onClick={onClick4}>4</Button>
-          <Button variant="outlined" onClick={onClick1}>1</Button>
-          <Button variant="outlined" onClick={onClickDot} disabled={!decimal}>.</Button>
-          <Button variant="outlined" onClick={onClick8}>8</Button>
-          <Button variant="outlined" onClick={onClick5}>5</Button>
-          <Button variant="outlined" onClick={onClick2}>2</Button>
-          <Button variant="outlined" onClick={onClick0}>0</Button>
-          <Button variant="outlined" onClick={onClick9}>9</Button>
-          <Button variant="outlined" onClick={onClick6}>6</Button>
-          <Button variant="outlined" onClick={onClick3}>3</Button>
-          <Button variant="outlined" onClick={onClick00}>00</Button>
-          <Button variant="outlined" onClick={onClickAllClear}>AC</Button>
-          <Button variant="outlined" onClick={onClickClear}>C</Button>
-          <Button variant="outlined" className="doge-enter" onClick={onClickEnter}>&#9166;</Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-});
-
-const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
+const NumpadApp: React.FunctionComponent<NumPadProps> = (props) => {
   const {
     inline = false,
     label = "",
@@ -146,7 +28,6 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
   } = props;
 
   const [isOpen, setOpen] = useState(false);
-  const [tmpValue, setTmpValue] = useState<string>(`${Math.min(value ?? 0, max)}`);
   const dialogRef = useRef<HTMLDivElement>(null);
 
   const onOpen = useCallback(() => setOpen(true), [setOpen]);
@@ -158,18 +39,10 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
     }
   }, [onOpen]);
   const onClose = useCallback(() => setOpen(false), [setOpen]);
-  const onClickNum = useCallback((num: number) => {console.log(tmpValue, num); setTmpValue(`${tmpValue}` === "0" ? `${num}` : `${tmpValue}${num}`);}, [tmpValue, setTmpValue]);
-  const onClick00 = useCallback(() => setTmpValue(`${tmpValue}` === "0" ? "0" : `${tmpValue}00`), [tmpValue, setTmpValue]);
-  const onClickDot = useCallback(() => decimal && tmpValue.indexOf(".") < 0 && setTmpValue(`${tmpValue}.`), [decimal, tmpValue, setTmpValue]);
-  const onClickAllClear = useCallback(() => setTmpValue("0"), [setTmpValue]);
-  const onClickClear = useCallback(() => tmpValue.length > 0 && setTmpValue(tmpValue.substr(0, tmpValue.length-1) || "0"), [tmpValue, setTmpValue]);
-  const onClickEnter = useCallback(() => {
-    const newValue = Number(decimal ? tmpValue.replace(/(\.\d\d)\d*/, "$1") : tmpValue); // to 2 decimal places
-    const limitedValue = Math.max(min, Math.min(max, newValue));
-    onChange(limitedValue);
-    setTmpValue("0");
+  const onEnter = useCallback((value: number) => {
+    onChange(value);
     setOpen(false);
-  }, [decimal, min, max, onChange, tmpValue, setTmpValue, setOpen]);
+  }, [onChange, setOpen]);
   const focusDialog = useCallback(() => setTimeout(() => {
     if (dialogRef.current) {
       dialogRef?.current?.focus?.();
@@ -183,22 +56,16 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
     isOpen && !inline && focusDialog();
   }, [isOpen, inline, focusDialog]);
 
-  useEffect(() => {
-    setTmpValue(`${value ?? 0}`);
-  }, [value, setTmpValue]);
-
   if (inline) {
     return (
-      <NumpadContainer
+      <Numpad
         label={label}
-        renderedValue={renderValue(tmpValue)}
+        value={value}
         decimal={decimal}
-        onClickNum={onClickNum}
-        onClickDot={onClickDot}
-        onClick00={onClick00}
-        onClickAllClear={onClickAllClear}
-        onClickClear={onClickClear}
-        onClickEnter={onClickEnter} />
+        min={min}
+        max={max}
+        renderValue={renderValue}
+        onEnter={onEnter} />
     );
   }
 
@@ -215,20 +82,18 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
     <div>
       {childrenWithEvents}
       <Dialog open={isOpen} onClose={onClose} className="doge-numpad">
-        <NumpadContainer
+        <Numpad
           ref={dialogRef}
-          onClickNum={onClickNum}
-          onClickDot={onClickDot}
-          onClick00={onClick00}
-          onClickAllClear={onClickAllClear}
-          onClickClear={onClickClear}
-          onClickEnter={onClickEnter}
           label={label}
-          renderedValue={renderValue(tmpValue)}
-          decimal={decimal} />
+          value={value}
+          decimal={decimal}
+          min={min}
+          max={max}
+          renderValue={renderValue}
+          onEnter={onEnter} />
       </Dialog>
     </div>
   );
 }
 
-export default Numpad;
+export default NumpadApp;
