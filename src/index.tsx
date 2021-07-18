@@ -17,34 +17,34 @@ export type NumPadProps = React.PropsWithChildren<{
   max?: number,
   min?: number,
   onChange?: (value: number | string) => void,
+  renderValue?: (value: number | string) => string,
 }>;
 
-const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
+type NumPadContainerProps = React.PropsWithChildren<{
+  label?: string,
+  renderedValue?: string,
+  decimal?: boolean,
+  onClickNum: (value: number) => void,
+  onClickDot: () => void,
+  onClick00: () => void,
+  onClickAllClear: () => void,
+  onClickClear: () => void,
+  onClickEnter: () => void,
+}>;
+
+const NumpadContainer = React.forwardRef<HTMLDivElement, NumPadContainerProps>((props, ref) => {
   const {
-    inline = false,
     label = "",
-    value = 0,
+    renderedValue = "",
     decimal = true,
-    max = 1000000000000,
-    min = 0,
-    onChange = () => false,
-    children,
+    onClickNum = () => false,
+    onClickDot = () => false,
+    onClick00 = () => false,
+    onClickAllClear = () => false,
+    onClickClear = () => false,
+    onClickEnter = () => false,
   } = props;
 
-  const [isOpen, setOpen] = useState(false);
-  const [tmpValue, setTmpValue] = useState<string>(`${Math.min(value ?? 0, max)}`);
-  const dialogRef = useRef<HTMLDivElement>(null);
-
-  const onOpen = useCallback(() => setOpen(true), [setOpen]);
-  const onKeyOpen = useCallback((ev: React.KeyboardEvent) => {
-    const { keyCode } = ev;
-    if ((keyCode >= 48 && keyCode <= 57) || keyCode === 190 || keyCode === 13 || keyCode === 32) {
-      ev.preventDefault(); // prevent scrolling on hitting space, that's why we catch it on keydown
-      onOpen();
-    }
-  }, [onOpen]);
-  const onClose = useCallback(() => setOpen(false), [setOpen]);
-  const onClickNum = useCallback((num: number) => setTmpValue(`${tmpValue}` === "0" ? `${num}` : `${tmpValue}${num}`), [tmpValue, setTmpValue]);
   const onClick0 = useCallback(() => onClickNum(0), [onClickNum]);
   const onClick1 = useCallback(() => onClickNum(1), [onClickNum]);
   const onClick2 = useCallback(() => onClickNum(2), [onClickNum]);
@@ -55,17 +55,6 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
   const onClick7 = useCallback(() => onClickNum(7), [onClickNum]);
   const onClick8 = useCallback(() => onClickNum(8), [onClickNum]);
   const onClick9 = useCallback(() => onClickNum(9), [onClickNum]);
-  const onClick00 = useCallback(() => setTmpValue(`${tmpValue}` === "0" ? "0" : `${tmpValue}00`), [tmpValue, setTmpValue]);
-  const onClickDot = useCallback(() => decimal && tmpValue.indexOf(".") < 0 && setTmpValue(`${tmpValue}.`), [decimal, tmpValue, setTmpValue]);
-  const onClickAllClear = useCallback(() => setTmpValue("0"), [setTmpValue]);
-  const onClickClear = useCallback(() => tmpValue.length > 0 && setTmpValue(tmpValue.substr(0, tmpValue.length-1) || "0"), [tmpValue, setTmpValue]);
-  const onClickEnter = useCallback(() => {
-    const newValue = Number(decimal ? tmpValue.replace(/(\.\d\d)\d*/, "$1") : tmpValue); // to 2 decimal places
-    const limitedValue = Math.max(min, Math.min(max, newValue));
-    onChange(limitedValue);
-    setTmpValue("0");
-    setOpen(false);
-  }, [decimal, min, max, onChange, tmpValue, setTmpValue, setOpen]);
   const onKeyUp = useCallback((ev: React.KeyboardEvent) => {
     // only fire once
     const { keyCode } = ev;
@@ -80,6 +69,7 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
       case 55:
       case 56:
       case 57:
+        console.log("aaaa", ev.key, keyCode);
         onClickNum(keyCode-48);
         break;
       case 190:
@@ -105,27 +95,10 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
         break;
     }
   }, [onClickClear]);
-  const focusDialog = useCallback(() => setTimeout(() => {
-    if (dialogRef.current) {
-      dialogRef?.current?.focus?.();
-    } else {
-      focusDialog(); // next try
-    }
-  }, 50), [dialogRef]);
-  const render = (value = "") => value;
-    //numeral(decimal ? value.replace(/(\.\d\d)\d*/, "$1") : value).format(decimal ? "0,0[.]00" : "0,0") || 0;
 
-  useEffect(() => {
-    isOpen && focusDialog();
-  }, [isOpen, focusDialog]);
-
-  useEffect(() => {
-    setTmpValue(`${value ?? 0}`);
-  }, [value, setTmpValue]);
-
-  const Container = () => (
+  return (
     <Card
-      ref={dialogRef}
+      ref={ref}
       tabIndex={0}
       onKeyUp={onKeyUp}
       onKeyDown={onKeyDown}>
@@ -134,7 +107,7 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
         <TextField
           className="doge-display-container"
           type="text"
-          value={render(tmpValue)}
+          value={renderedValue}
           variant="outlined"
           inputProps={{ readOnly: true }} />
         <div className="doge-button-container">
@@ -157,9 +130,76 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
       </CardContent>
     </Card>
   );
+});
+
+const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
+  const {
+    inline = false,
+    label = "",
+    value = 0,
+    decimal = true,
+    max = 1000000000000,
+    min = 0,
+    onChange = () => false,
+    renderValue = (value) => String(value),
+    children,
+  } = props;
+
+  const [isOpen, setOpen] = useState(false);
+  const [tmpValue, setTmpValue] = useState<string>(`${Math.min(value ?? 0, max)}`);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  const onOpen = useCallback(() => setOpen(true), [setOpen]);
+  const onKeyOpen = useCallback((ev: React.KeyboardEvent) => {
+    const { keyCode } = ev;
+    if ((keyCode >= 48 && keyCode <= 57) || keyCode === 190 || keyCode === 13 || keyCode === 32) {
+      ev.preventDefault(); // prevent scrolling on hitting space, that's why we catch it on keydown
+      onOpen();
+    }
+  }, [onOpen]);
+  const onClose = useCallback(() => setOpen(false), [setOpen]);
+  const onClickNum = useCallback((num: number) => {console.log(tmpValue, num); setTmpValue(`${tmpValue}` === "0" ? `${num}` : `${tmpValue}${num}`);}, [tmpValue, setTmpValue]);
+  const onClick00 = useCallback(() => setTmpValue(`${tmpValue}` === "0" ? "0" : `${tmpValue}00`), [tmpValue, setTmpValue]);
+  const onClickDot = useCallback(() => decimal && tmpValue.indexOf(".") < 0 && setTmpValue(`${tmpValue}.`), [decimal, tmpValue, setTmpValue]);
+  const onClickAllClear = useCallback(() => setTmpValue("0"), [setTmpValue]);
+  const onClickClear = useCallback(() => tmpValue.length > 0 && setTmpValue(tmpValue.substr(0, tmpValue.length-1) || "0"), [tmpValue, setTmpValue]);
+  const onClickEnter = useCallback(() => {
+    const newValue = Number(decimal ? tmpValue.replace(/(\.\d\d)\d*/, "$1") : tmpValue); // to 2 decimal places
+    const limitedValue = Math.max(min, Math.min(max, newValue));
+    onChange(limitedValue);
+    setTmpValue("0");
+    setOpen(false);
+  }, [decimal, min, max, onChange, tmpValue, setTmpValue, setOpen]);
+  const focusDialog = useCallback(() => setTimeout(() => {
+    if (dialogRef.current) {
+      dialogRef?.current?.focus?.();
+    } else {
+      focusDialog(); // next try
+    }
+  }, 50), [dialogRef]);
+    //numeral(decimal ? value.replace(/(\.\d\d)\d*/, "$1") : value).format(decimal ? "0,0[.]00" : "0,0") || 0;
+
+  useEffect(() => {
+    isOpen && !inline && focusDialog();
+  }, [isOpen, inline, focusDialog]);
+
+  useEffect(() => {
+    setTmpValue(`${value ?? 0}`);
+  }, [value, setTmpValue]);
 
   if (inline) {
-    return <Container />;
+    return (
+      <NumpadContainer
+        label={label}
+        renderedValue={renderValue(tmpValue)}
+        decimal={decimal}
+        onClickNum={onClickNum}
+        onClickDot={onClickDot}
+        onClick00={onClick00}
+        onClickAllClear={onClickAllClear}
+        onClickClear={onClickClear}
+        onClickEnter={onClickEnter} />
+    );
   }
 
   const childrenWithEvents = React.isValidElement(children) ? React.Children.map(children, (child, i) => React.cloneElement(child, {
@@ -175,7 +215,17 @@ const Numpad: React.FunctionComponent<NumPadProps> = (props) => {
     <div>
       {childrenWithEvents}
       <Dialog open={isOpen} onClose={onClose} className="doge-numpad">
-        <Container />
+        <NumpadContainer
+          ref={dialogRef}
+          onClickNum={onClickNum}
+          onClickDot={onClickDot}
+          onClick00={onClick00}
+          onClickAllClear={onClickAllClear}
+          onClickClear={onClickClear}
+          onClickEnter={onClickEnter}
+          label={label}
+          renderedValue={renderValue(tmpValue)}
+          decimal={decimal} />
       </Dialog>
     </div>
   );

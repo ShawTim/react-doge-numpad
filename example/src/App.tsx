@@ -8,8 +8,9 @@ const App = () => {
 
   return (
     <Numpad
+      value={Number(value)}
       onChange={(value: number | string) => setValue(`${value}`)}>
-      <input type="text" value={value} />
+      <input type="text" value={value} readOnly />
     </Numpad>
   )
 
