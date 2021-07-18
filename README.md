@@ -4,11 +4,13 @@
 
 ![doge](https://github.com/ShawTim/react-doge-numpad/raw/master/react-doge-numpad.png)
 
-This react component is created by a DOGE lover. No it's nth related to the component itself. I just want to share my love to DOGE to all of you.
+This react component is created by a *DOGE* lover. No it's nth related to the component itself. I just want to share my love to DOGE to all of you.
+
+### This is NOT a joke, this is NOT an assignment of a course. This is a working react component.
 
 ![screenshot](https://github.com/ShawTim/react-doge-numpad/raw/master/screenshot.png)
 
-This is a Numpad popup.
+This is a Numpad component. I build this becoz I want a react numpad component so badly but *MOST* of the react numpad components available in the npmjs are apparently some assignments of some programming courses. I give up and I have to build one for myself. And now I want to share it to you all.
 
 [![NPM](https://img.shields.io/npm/v/react-doge-numpad.svg)](https://www.npmjs.com/package/react-doge-numpad) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
