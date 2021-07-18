@@ -8,11 +8,6 @@ const App = () => {
 
   return (
     <Numpad
-      label="Label"
-      value={0}
-      decimal={true}
-      max={1000000000000}
-      min={0}
       onChange={(value: number | string) => setValue(`${value}`)}>
       <input type="text" value={value} />
     </Numpad>
