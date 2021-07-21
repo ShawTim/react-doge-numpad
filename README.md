@@ -12,7 +12,7 @@ This react component is created by a *DOGE* lover. No it's nth related to the co
 
 This is a Numpad component. I build this becoz I want a react numpad component so badly but *MOST* of the react numpad components available in the npmjs are apparently some assignments of some programming courses. I give up and I have to build one for myself. And now I want to share it to you all.
 
-[![NPM](https://img.shields.io/npm/v/react-doge-numpad.svg)](https://www.npmjs.com/package/react-doge-numpad) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://badgen.net/npm/v/react-doge-numpad)](https://www.npmjs.com/package/react-doge-numpad) [![Downloads](https://badgen.net/badge/license/MIT/blue)](https://www.npmjs.com/package/react-doge-numpad) [![Downloads](https://badgen.net/npm/dt/react-doge-numpad)](https://www.npmjs.com/package/react-doge-numpad)
 
 ## Install
 
@@ -47,17 +47,17 @@ const App = () => {
 
 ## Parameters
 
-| Name | Type | Mandatory | Default | Description |
-| --- | --- | --- | --- | --- |
-| `inline` | `boolean` | N | `true` | By default Numpad is a popup. Setting `inline` to be `true` will render the component inline instead of a popup |
-| `label` | `string` | N | `""` | Title of the Numpad |
-| `value` | `number` | N | `0` | Default value shown on the Numpad |
-| `decimal` | `boolean` | N | `true` | Indicate whether the Numpad support decimal |
-| `max` | `number` | N | `1000000000000` | Upper bound of the number |
-| `min` | `number` | N | `0` | Lower bound of the number |
-| `onChange` | `(value: number/string) => void` | N | `() => false` | Callback for handling event when user press Enter |
-| `renderValue` | `(value: number/string) => string` | N | `(value) => String(value)` | Custom function for render/format the number (e.g. currency formating) |
-| `children` | `JSXElement` | N | `null` | Children are required if `inline` is set to `false`, meaning the Numpad is shown as a popup. To enable the Numpad user needs to click or press keys on the children element(s). It can be a `<input>`, a `<button>`, or whatever React components. |
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `inline` | `boolean` |  `true` | By default Numpad is a popup. Setting `inline` to be `true` will render the component inline instead of a popup |
+| `label` | `string` |  `""` | Title of the Numpad |
+| `value` | `number` |  `0` | Default value shown on the Numpad |
+| `decimal` | `boolean` |  `true` | Indicate whether the Numpad support decimal |
+| `max` | `number` |  `1000000000000` | Upper bound of the number |
+| `min` | `number` |  `0` | Lower bound of the number |
+| `onChange` | `(value: number/string) => void` |  `() => false` | Callback for handling event when user press Enter |
+| `renderValue` | `(value: number/string) => string` |  `(value) => String(value)` | Custom function for render/format the number (e.g. currency formating) |
+| `children` | `JSXElement` |  `null` | Children are required if `inline` is set to `false`, meaning the Numpad is shown as a popup. To enable the Numpad user needs to click or press keys on the children element(s). It can be a `<input>`, a `<button>`, or whatever React components. |
 
 ## License
 
